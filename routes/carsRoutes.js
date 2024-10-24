@@ -74,16 +74,15 @@ carsRouter.put("/:id", (req, res) => {
 
 // DELETE
 carsRouter.delete("/:id", (req, res) => {
-	res.json({
-		msg: "update a car based on its id ... ",
+	const { id } = req.params
+	db.run("DELETE FROM cars WHERE id = ?", [id], function (err) {
+		if (err) {
+			res.status(404).json({ error: err.message })
+		} else {
+			res.json({ changes: this.changes })
+		}
 	})
 })
 
-// GET one car based on its id
-carsRouter.get("/:id", (req, res) => {
-	res.json({
-		msg: "update a car based on its id ... ",
-	})
-})
 
 module.exports = carsRouter
