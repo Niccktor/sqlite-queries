@@ -32,10 +32,25 @@ carsRouter.get("/:id", (req, res) => {
 
 // POST add a new car
 carsRouter.post("/", (req, res) => {
-	res.json({
-		msg: "add a new car ... ",
-	})
+	const { carName, carYear, carImg } = req.body
+	if (!carName || !carYear || !carImg) {
+		return res.status(400).json({ error: "carName, carYear ou carImg sont vide" + carName + carYear, carImg });
+	}
+	db.run(
+		"INSERT INTO cars (carName, carYear, carImage) VALUES (?, ?, ?)",
+		[carName, carYear, carImg],
+		function (err) {
+			if (err) {
+				res.status(500).json({ error: err.message })
+			} else {
+				res.json({ id: this.lastID })
+			}
+		}
+	)
 })
+
+// PUT update a car based on the param id
+
 
 // PUT update a car based on the param id
 carsRouter.put("/:id", (req, res) => {
