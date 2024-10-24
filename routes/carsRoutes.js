@@ -19,6 +19,17 @@ carsRouter.get("/", (req, res) => {
 	})
 })
 
+carsRouter.get("/:id", (req, res) => {
+	const { id } = req.params // obtenir l'id à partir des paramètres
+	db.get("SELECT * FROM cars WHERE id = ?", [id], (err, row) => {
+		if (err) {
+			res.status(500).json({ error: err.message })
+		} else {
+			res.json(row)
+		}
+	})
+})
+
 // POST add a new car
 carsRouter.post("/", (req, res) => {
 	res.json({
