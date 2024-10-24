@@ -54,12 +54,25 @@ carsRouter.post("/", (req, res) => {
 
 // PUT update a car based on the param id
 carsRouter.put("/:id", (req, res) => {
-	res.json({
-		msg: "update a car based on its id ... ",
-	})
+	const { id } = req.params
+	const { carName, carYear, carImg } = req.body
+	if (!carName || !carYear || !carImg) {
+		return res.status(400).json({ error: "carName, carYear ou carImg sont vide" + carName + carYear, carImg });
+	}
+	db.run(
+		"UPDATE cars SET carName = ?, carYear = ?, carImage = ? WHERE id = ?",
+		[carName, carYear, carImg, id],
+		function (err) {
+			if (err) {
+				res.status(500).json({ error: err.message })
+			} else {
+				res.json({ changes: this.changes })
+			}
+		}
+	)
 })
 
-// DELETE delete a car based on the param id
+// DELETE
 carsRouter.delete("/:id", (req, res) => {
 	res.json({
 		msg: "update a car based on its id ... ",
